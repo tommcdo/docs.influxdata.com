@@ -1,5 +1,5 @@
 ---
-title: Anti-entropy service in InfluxDB Enterprise
+title: Anti-Entropy service in InfluxDB Enterprise
 aliases:
   - /enterprise_influxdb/v1.7/guides/anti-entropy/
 menu:
@@ -8,6 +8,15 @@ menu:
     weight: 40
     parent: Administration
 ---
+
+<dt>
+#### Anti-Entropy service disabled by default
+
+Prior to v.1.7.2, the Anti-Entropy (AE) service was enabled by default. When shards create large digests with lots of time ranges (10s of thousands), some customers experienced significant performance issues, including CPU usage spikes. If your shards include a small number of time ranges (most have 1 to 10, some have up to several hundreds) and you can benefit from the AE service, then you can enable AE and watch to see if performance is significantly impacted.
+
+**When to use the AE service**
+....
+</dt>
 
 ## Introduction
 
@@ -42,16 +51,19 @@ a replication factor of 3 can recover from two missing or inconsistent nodes, an
 A replication factor of 1 cannot be recovered by the anti-entropy service.
 
 ## Symptoms of entropy
+
 The AE process automatically detects and fixes missing shards, but shard inconsistencies
 must be [manually detected and queued for repair](#detecting-and-repairing-entropy).
 There are symptoms of entropy that, if seen, would indicate an entropy repair is necessary.
 
 ### Different results for the same query
+
 When running queries against an InfluxDB Enterprise cluster, each query may be routed to a different data node.
 If entropy affects data within the queried range, the same query will return different
 results depending on which node it is run against.
 
 _**Query attempt 1**_
+
 ```
 SELECT mean("usage_idle") WHERE time > '2018-06-06T18:00:00Z' AND time < '2018-06-06T18:15:00Z' GROUP BY time(3m) FILL(0)
 
@@ -66,6 +78,7 @@ time                  mean
 ```
 
 _**Query attempt 2**_
+
 ```
 SELECT mean("usage_idle") WHERE time > '2018-06-06T18:00:00Z' AND time < '2018-06-06T18:15:00Z' GROUP BY time(3m) FILL(0)
 
@@ -82,6 +95,7 @@ time                  mean
 This indicates that data is missing in the queried time range and entropy is present.
 
 ### Flapping dashboards
+
 A "flapping" dashboard means data visualizations changing when data is refreshed
 and pulled from a node with entropy (inconsistent data).
 It is the visual manifestation of getting [different results from the same query](#different-results-for-the-same-query).
@@ -91,6 +105,7 @@ It is the visual manifestation of getting [different results from the same query
 ## Technical details
 
 ### Detecting entropy
+
 The AE service runs on each data node and periodically checks its shards' statuses
 relative to the next data node in the ownership list.
 It does this by creating a "digest" or summary of data in the shards on the node.
@@ -105,6 +120,7 @@ If the reported modification time is different than it was in the previous check
 If there's a difference, `shard1` is flagged as having entropy.
 
 ### Repairing entropy
+
 If during a status check a node determines the next node is completely missing a shard,
 it immediately adds the missing shard to the repair queue.
 A background routine monitors the queue and begins the repair process as new shards are added to it.
@@ -124,6 +140,7 @@ Once `node2` finishes applying the patch, it queues a repair for `shard1` locall
 The "node-to-node" shard repair continues until it runs on every data node that owns the shard in need of repair.
 
 ### Repair order
+
 Repairs between shard owners happen in a deterministic order.
 This doesn't mean repairs always start on node 1 and then follow a specific node order.
 Repairs are viewed at the shard level.
@@ -146,6 +163,7 @@ Each owner will check the list to detect when the repair has cycled through all 
 at which point the repair is finished.
 
 ### Hot shards
+
 The AE service does its best to avoid hot shards (shards that are currently receiving writes)
 because they change quickly.
 While write replication between shard owner nodes (with a
@@ -171,10 +189,12 @@ until it either shows as being in the queue, being repaired, or no longer in the
 Anti-entropy configuration options are available in [`[anti-entropy]`](/enterprise_influxdb/v1.7/administration/config-data-nodes#anti-entropy) section of your `influxdb.conf`.
 
 ## Command line tools for managing entropy
+
 The `influxd-ctl entropy` command enables you to manage entropy among shards in a cluster.
 It includes the following subcommands:
 
 #### `show`
+
 Lists shards that are in an inconsistent state and in need of repair as well as
 shards currently in the repair queue.
 
@@ -183,6 +203,7 @@ influxd-ctl entropy show
 ```
 
 #### `repair`
+
 Queues a shard for repair.
 It requires a Shard ID which is provided in the [`show`](#show) output.
 
@@ -197,6 +218,7 @@ There is no harm in making multiple requests to repair the same shard even if
 it is already queued, currently being repaired, or not in need of repair.
 
 #### `kill-repair`
+
 Removes a shard from the repair queue.
 It requires a Shard ID which is provided in the [`show`](#show) output.
 
@@ -212,17 +234,17 @@ Once a repair has started, requests to cancel it are ignored.
 > It may be possible to stop repairs for missing shards with the
 > [`influxd-ctl kill-copy-shard`](/enterprise_influxdb/v1.7/administration/cluster-commands/#kill-copy-shard) command.
 
-
 ## Scenarios
 
 This section covers some of the common use cases for the anti-entropy service.
 
 ### Detecting and repairing entropy
+
 Periodically, you may want to see if shards in your cluster have entropy or are
 inconsistent with other shards in the shard group.
 Use the `influxd-ctl entropy show` command to list all shards with detected entropy:
 
-```
+```bash
 influxd-ctl entropy show
 
 Entropy
@@ -235,7 +257,7 @@ ID     Database  Retention Policy  Start                          End           
 Then use the `influxd-ctl entropy repair` command to add the shards with entropy
 to the repair queue:
 
-```
+```bash
 influxd-ctl entropy repair 21179
 
 Repair Shard 21179 queued
@@ -247,7 +269,7 @@ Repair Shard 25165 queued
 
 Check on the status of the repair queue with the `influxd-ctl entropy show` command:
 
-```
+```bash
 influxd-ctl entropy show
 
 Entropy
@@ -263,7 +285,7 @@ Queued Shards: [21179 25165]
 
 If a data node suddenly disappears due to a catastrophic hardware failure or for any other reason, as soon as a new data node is online, the anti-entropy service will copy the correct shards to the new replacement node. The time it takes for the copying to complete is determined by the number of shards to be copied and how much data is stored in each.
 
-_View the [Replacing Data Nodes](/enterprise_influxdb/v1.7/guides/replacing-nodes/#replacing-data-nodes-in-an-influxdb-enterprise-cluster) documentation for instructions on replacing data nodes in your InfluxDB Enterprise cluster._
+For information on replacing data nodes in your InfluxDB Enterprise cluster, see [Replacing data nodes](/enterprise_influxdb/v1.7/guides/replacing-nodes/#replacing-data-nodes-in-an-influxdb-enterprise-cluster).
 
 ### Replacing a machine that is running a data node
 
@@ -276,6 +298,7 @@ The anti-entropy process will continue copying the appropriate shards from the
 remaining replicas in the cluster.
 
 ### Fixing entropy in active shards
+
 In rare cases, the currently active shard, or the shard to which new data is
 currently being written, may find itself with inconsistent data.
 Because the AE process can't write to hot shards, you must stop writes to the new
@@ -301,6 +324,7 @@ influxd-ctl entropy repair 21179
 ## Troubleshooting
 
 ### Queued repairs are not being processed
+
 The primary reason a repair in the repair queue isn't being processed is because
 it went "hot" after the repair was queued.
 AE can only repair cold shards, or shards that are not currently being written to.
@@ -312,25 +336,13 @@ shard, you can `truncate-shards` to stop writes to active shards. This process i
 outlined [above](#fixing-entropy-in-active-shards).
 
 ### AE log messages
+
 Below are common messages output by AE along with what they mean.
 
 #### `Checking status`
+
 Indicates that the AE process has begun the [status check process](#detecting-entropy).
 
 #### `Skipped shards`
+
 Indicates that the AE process has skipped a status check on shards because they are currently [hot](#hot-shards).
-
-
-## Changes to the AE Service in v1.6
-
-- New `entropy` command in the `influxd-ctl` cluster management utility that
-  includes `show`, `repair`, and `kill-repair` subcommands.
-- New `/repair` API _(Documentation Coming)_.
-- New `/cancel-repair` API _(Documentation Coming)_.
-- Updated `/status` API that now includes a list of shards waiting in the repair
-  queue and a list of shards currently being repaired.
-- New [repair order](#repair-order).
-- Repairs are now "push" instead of "pull".
-  In v1.5, repairs of missing shards were done with a "pull" of the shard from another node.
-  The AE service would notice a shard missing and choose another owner to copy from.
-  In 1.6, it happens in the deterministic order described [above](#repair-order).
