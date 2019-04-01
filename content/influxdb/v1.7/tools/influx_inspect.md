@@ -110,27 +110,25 @@ Flag to enable output in verbose mode.
 
 The directory for the WAL (Write Ahead Log) files.
 
-
 #### Examples
 
 ##### Converting all shards on a node
 
-```
-$ influx_inspect buildtsi -datadir ~/.influxdb/data -waldir ~/.influxdb/wal
-
+```bash
+influx_inspect buildtsi -datadir ~/.influxdb/data -waldir ~/.influxdb/wal
 ```
 
 ##### Converting all shards for a database
 
-```
-$ influx_inspect buildtsi -database mydb -datadir ~/.influxdb/data -waldir ~/.influxdb/wal
+```bash
+influx_inspect buildtsi -database mydb -datadir ~/.influxdb/data -waldir ~/.influxdb/wal
 
 ```
 
 ##### Converting a specific shard
 
-```
-$ influx_inspect buildtsi -database stress -shard 1 -datadir ~/.influxdb/data -waldir ~/.influxdb/wal
+```bash
+influx_inspect buildtsi -database stress -shard 1 -datadir ~/.influxdb/data -waldir ~/.influxdb/wal
 ```
 
 ### `deletetsm`
@@ -144,6 +142,7 @@ Bulk deletes a measurement from a raw TSM file.
 ````
 influx_inspect deletetsm -measurement <measurement_name> [ arguments ] <path>
 ````
+
 ##### `<path>`
 
 Path to the `.tsm` file, located by default in the `data` directory.
@@ -154,12 +153,13 @@ When specifying the path, wildcards (`*`) can replace one or more characters.
 
 ##### Delete a measurement from a single shard
 
-```
+```bash
 ./influx_inspect deletetsm -sanitize /influxdb/data/location/autogen/1384/*.tsm
 ```
+
 ##### Delete a measurement from all shards in the database
 
-```
+```bash
 ./influx_inspect deletetsm -sanitize /influxdb/data/location/autogen/*/*.tsm
 ```
 
@@ -179,16 +179,16 @@ Flag to remove all keys containing non-printable Unicode characters.
 
 Flag to enable verbose logging.
 
-
 ### `dumptsi`
 
 Dumps low-level details about TSI files, including `.tsl` log files and `.tsi` index files.
 
 #### Syntax
 
-```
+```bash
 influx_inspect dumptsi [ options ] <index_path>
 ```
+
 If no options are specified, summary statistics are provided for each file.
 
 #### Options
@@ -235,18 +235,20 @@ Filter data by tag value regular expression.
 
 ##### Specifying paths to the `_series` and `index` directories
 
+```bash
+influx_inspect dumptsi -series-file /path/to/db/_series /path/to/index
 ```
-$ influx_inspect dumptsi -series-file /path/to/db/_series /path/to/index
-```
+
 ##### Specifying paths to the `_series` directory and an `index` file
 
+```bash
+influx_inspect dumptsi -series-file /path/to/db/_series /path/to/index/file0
 ```
-$ influx_inspect dumptsi -series-file /path/to/db/_series /path/to/index/file0
-```
+
 ##### Specifying paths to the `_series` directory and multiple `index` files
 
-```
-$ influx_inspect dumptsi -series-file /path/to/db/_series /path/to/index/file0 /path/to/index/file1 ...
+```bash
+influx_inspect dumptsi -series-file /path/to/db/_series /path/to/index/file0 /path/to/index/file1 ...
 ```
 
 ### `dumptsm`
@@ -255,7 +257,7 @@ Dumps low-level details about [TSM](/influxdb/v1.7/concepts/glossary/#tsm-time-s
 
 #### Syntax
 
-```
+```bash
 influx_inspect dumptsm [ options ] <path>
 ```
 
@@ -293,7 +295,7 @@ Dumps all entries from one or more WAL (`.wal`) files only and excludes TSM (`.t
 
 #### Syntax
 
-```
+```bash
 influx_inspect dumptsmwal [ options ] <wal_dir>
 ```
 
@@ -306,17 +308,16 @@ Optional arguments are in brackets.
 Flag to show keys which have duplicate or out-of-order timestamps.
 If a user writes points with timestamps set by the client, then multiple points with the same timestamp (or with time-descending timestamps) can be written.
 
-
 ### `export`
 
-Exports all TSM files in Line Protocol data format.
+Exports all TSM files into InfluxDB Line Protocol data format.
 Writes all WAL file data for `_internal/monitor`.
-This output file can be imported using the
-[influx](/influxdb/v1.7/tools/shell/#import-data-from-a-file-with-import) command.
+The output åcan be imported using the
+[influx -import](/influxdb/v1.7/tools/shell/#import-data-from-a-file-with-import) command.
 
 #### Syntax
 
-```
+```bash
 influx_inspect export [ options ]
 ```
 
@@ -326,7 +327,7 @@ Optional arguments are in brackets.
 
 ##### [ `-compress` ]
 
-The flag to compress the output.
+The flag to enable `gzip` compression on the output.
 Default value is `false`.
 
 ##### [ `-database <db_name>` ]
@@ -334,7 +335,13 @@ Default value is `false`.
 The name of the database to export.
 Default value is `""`.
 
-##### `-datadir <data_dir>`
+A specific shard can be specified by using the following syntax for the database value.
+
+```bash
+<db_name>/<rp_name>/<shard_ID>
+```
+
+##### [ `-datadir <data_dir>` ]
 
 The path to the `data` directory.
 Default value is `"$HOME/.influxdb/data"`.
@@ -343,30 +350,36 @@ Default value is `"$HOME/.influxdb/data"`.
 
 The timestamp for the end of the time range. Must be in [RFC3339 format](https://tools.ietf.org/html/rfc3339).
 
-RFC3339 requires very specific formatting. For example, to indicate no time zone offset (UTC+0), you must include Z or +00:00 after seconds. Examples of valid RFC3339 formats include:
+RFC3339 requires specific formatting. For example, to indicate no time zone offset (UTC+0), you must include Z or +00:00 after seconds. Examples of valid RFC3339 formats include:
 
 **No offset**
-```
+
+```bash
 YYYY-MM-DDTHH:MM:SS+00:00 
 YYYY-MM-DDTHH:MM:SSZ 
 YYYY-MM-DDTHH:MM:SS.nnnnnnZ (fractional seconds (.nnnnnn) are optional)
 ```
+
 **With offset**
-```
+
+```bash
 YYYY-MM-DDTHH:MM:SS-08:00
 YYYY-MM-DDTHH:MM:SS+07:00
 ```
 
 > **Note:** With offsets, avoid replacing the + or - sign with a Z. It may cause an error or print Z (ISO 8601 behavior) instead of the time zone offset.
 
-##### [ `-out <export_dir>` ]
+##### [ `-out <export_file>` ]
 
-The location for the export file.
-Default value is `"$HOME/.influxdb/export"`.
+The destination file to export to in Line Protocol format.
+The default value is `"$HOME/.influxdb/export"`.
 
 ##### [ `-retention <rp_name> ` ]
 
-The name of the [retention policy](/influxdb/v1.7/concepts/glossary/#retention-policy-rp) to export. Default value is `""`.
+The name of the [retention policy](/influxdb/v1.7/concepts/glossary/#retention-policy-rp) to export.
+To use this option, you must specify
+The default value is `""`.
+
 
 ##### [ `-start <timestamp>` ]
 
@@ -382,25 +395,27 @@ Default value is `"$HOME/.influxdb/wal"`.
 
 ##### Export entire database and compress the output
 
-```
-influx_inspect export -compress
+The following example would result in the `mydb` database being exported in GZIP compression to an output file named `mydb-node1.gz`.
+
+```bash
+influx_inspect export -database mydb -compress -out mydb_node1.gz -start <timestamp> -end <timestamp>
 ```
 
 ##### Export data from a specific database and retention policy
 
-```
-influx_inspect export -database mydb -retention autogen
+```bash
+influx_inspect export -database mydb -retention myrp
 ```
 
-##### Output file
+##### Example of output file
 
-```
+```text
 # DDL
-CREATE DATABASE MY_DB_NAME
-CREATE RETENTION POLICY autogen ON MY_DB_NAME DURATION inf REPLICATION 1
+CREATE DATABASE MY_DB
+CREATE RETENTION POLICY autogen ON MY_DB DURATION inf REPLICATION 1
 
 # DML
-# CONTEXT-DATABASE:MY_DB_NAME
+# CONTEXT-DATABASE:MY_DB
 # CONTEXT-RETENTION-POLICY:autogen
 randset value=97.9296104805 1439856000000000000
 randset value=25.3849066842 1439856100000000000
@@ -413,7 +428,7 @@ The default location is `$HOME/.influxdb`.
 
 #### Syntax
 
-```
+```bash
 influx_inspect report [ options ]
 ```
 
@@ -455,7 +470,7 @@ and for each shard will help answer those questions.
 
 ### Syntax
 
-```
+```bash
 influx_inspect reporttsi -db-path <path-to-db> [ options ]
 ```
 
@@ -483,9 +498,10 @@ Verifies the integrity of TSM files.
 
 #### Syntax
 
-```
+```bash
 influx_inspect verify [ options ]
 ```
+
 #### Options
 
 Optional arguments are in brackets.
@@ -501,7 +517,7 @@ Verifies the integrity of series files.
 
 #### Syntax
 
-```
+```bash
 influx_inspect verify-seriesfile [ options ]
 ```
 
