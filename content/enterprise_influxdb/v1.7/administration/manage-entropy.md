@@ -8,11 +8,10 @@ menu:
 ---
 
 <dt>
-The procedures on this page assume that the [Anti-Entropy service](/enterprise_influxdb/v1.7/administration/anti-entropy)
-is disabled. 
+The procedures on this page assume that the [Anti-Entropy service](/enterprise_influxdb/v1.7/administration/anti-entropy) is disabled. 
 </dt>
 
-In InfluxDB Enterprise clusters, data is written to two or more replica shards 
+Data written to InfluxDB Enterprise clusters are written to one shard and then copied to other shards. Due to unexpected events, however, the copies can become inconsistent, that is having different data in each.
 
 - flapping
 - query results differ depending on shard
@@ -26,7 +25,6 @@ Here are the most frequent causes of entropy in InfluxDB Enterprise clusters:
 - Dropping or deleting series
 - Hinted Handoff (HH) overflows
 - Server crashes, particularly data node panics when in-flight data could be dropped
-
 
 Overwriting everything has two consequences:
 
