@@ -11,25 +11,51 @@ menu:
 The procedures on this page assume that the [Anti-Entropy service](/enterprise_influxdb/v1.7/administration/anti-entropy) is disabled. 
 </dt>
 
-Data written to InfluxDB Enterprise clusters are written to one shard and then copied to other shards. Due to unexpected events, however, the copies can become inconsistent, that is having different data in each.
+## Shard entropy overview
 
-- flapping
-- query results differ depending on shard
+Data is written to InfluxDB Enterprise clusters and replicated in multiple shards (copies of data) across data nodes in the cluster. The number of shard copies is determined by the replication factor (RF) and during normal operations, data is written to a shard and replicated to the shard copies without isssues. At any instant of time, the multiple copies are not exact copies of each other, but as the data is replicated among the shards, the data is eventually consistent and are replicas of each other. Due to unanticipated events, however, the copies of data between the shards can become inconsistent, and the differences between the copies need to be reconciled.
 
-## Causes of inconsistent data between replica shards
+In InfluxDB Enterprise clusters, the [Anti-Entropy service](/enterprise_influxdb/v1.7/administration/anti-entropy) is intended to be used for automatically tracking and maintaining the consistency of the data copies. Depending on your application, especially when the time series data includes a massive number of time ranges (tens of thousands), you might not be able to use the Anti-Entropy service without encountering serious performance issues.
 
-Entropy, or data inconcistencies, tend to occur when unanticipated events occur.
-Here are the most frequent causes of entropy in InfluxDB Enterprise clusters:
+This topic provides guidance on how to manage shard entropy (the inconsistency among shards in a shard group) due to missing missing data.
 
+## Indicators of shard entropy
+
+When shards become inconsistent, you might notice the following:
+
+- Inconsistent results for the same query.
+- Counts of data between shards differ.
+- Flapping metrics
+  - Rapid alert status changes.
+    - Alerts that fire and clear repeatedly in a short time period.
+    - Values in graphs change erratically or switch rapidly.
+- Shard copies are not the same size.
+
+## Causes of shard entropy
+
+Shard entropy, or inconcistencies of data between shards within a shard group, can occur when unanticipated events occur. 
+Some of the most frequent causes of entropy in InfluxDB Enterprise clusters include:
+
+- Hardware failure
+  - Server crashes, particularly 
+  - Power interruptions or failures
+  - Network interruptions or failures
+- Server crashes
+  - Data node panics when inflight data could be dropped
+  - When a node crashes after the write was replicated, but before the `fsync` operation on the remote node, 
 - Dropping or deleting measurements
 - Dropping or deleting series
-- Hinted Handoff (HH) overflows
-- Server crashes, particularly data node panics when in-flight data could be dropped
+- [Hinted Handoff (HH)]() overflows
+- Batch write interruptions resulting in partial data writes
 
 Overwriting everything has two consequences:
 
 - Recompaction to read-optimize including the added missing data
 - Slower queries temporarily until recompaction finished
+
+## Manage shard entropy without the Anti-Entropy service
+
+If you have determined that
 
 Prerequisites
 

@@ -6,5 +6,5 @@ menu:
   name: CLA
   weight: 30
   parent: about_the_project
-  url: https://influxdb.com/community/cla.html
+  url: https://www.influxdata.com/legal/cla/
 ---
