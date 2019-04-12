@@ -1,5 +1,6 @@
 ---
-title: Manage entropy without the Anti-Entropy service
+title: Manage data inconsistency in InfluxDB Enterprise clusters
+description: Manage data inconsitency, or entropy, in InfluxDB Enterprise clusters manually or with the Anti-Entropy service.
 menu:
   enterprise_influxdb_1_7:
     menu: Anti-entropy service
@@ -100,6 +101,7 @@ that cover the time period you want to fill in.
 influx_inspect export -database <db_name> [-start <timestamp> -end <timestamp> ]
 ```
 
+
 #### 2. Copy data into the target replica shard
 
 On the data node you are repairing, use the `influxd-ctl copy-shard` command
@@ -108,6 +110,8 @@ to copy the data in the
 ```bash
 influxd-ctl copy-shard -database <db_name> ]
 ```
+
+
 
 For details on using `influx -import`, see [Import data from a file with `-import`](https://docs.influxdata.com/influxdb/v1.7/tools/shell/#import-data-from-a-file-with-import)
 

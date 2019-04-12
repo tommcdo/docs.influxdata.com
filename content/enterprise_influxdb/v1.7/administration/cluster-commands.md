@@ -19,36 +19,35 @@ for interacting with and managing your data.
 #### Content
 
 * [`influxd-ctl` cluster management utility](#influxd-ctl-cluster-management-utility)
-    * [Syntax](#syntax)
-    * [Global options](#global-options)
-        * [`-auth-type`](#auth-type-none-basic-jwt)
-        * [`-bind-tls`](#bind-tls)
-        * [`-config`](#config-path-to-configuration-file)
-        * [`-pwd`](#pwd-password)
-        * [`-k`](#k)
-        * [`-secret`](#secret-jwt-shared-secret)
-        * [`-user`](#user-username)
+  * [Syntax](#syntax)
+  * [Global options](#global-options)
+    * [`-auth-type`](#auth-type-none-basic-jwt)
+    * [`-bind-tls`](#bind-tls)
+    * [`-config`](#config-path-to-configuration-file)
+    * [`-pwd`](#pwd-password)
+    * [`-k`](#k)
+    * [`-secret`](#secret-jwt-shared-secret)
+    * [`-user`](#user-username)
     * [Commands](#commands)
-        * [`add-data`](#add-data)
-        * [`add-meta`](#add-meta)
-        * [`backup`](#backup)
-        * [`copy-shard`](#copy-shard)
-        * [`copy-shard-status`](#copy-shard-status)
-        * [`entropy`](#entropy)
-        * [`join`](#join)
-        * [`kill-copy-shard`](#kill-copy-shard)
-        * [`leave`](#leave)
-        * [`remove-data`](#remove-data)
-        * [`remove-meta`](#remove-meta)
-        * [`remove-shard`](#remove-shard)
-        * [`restore`](#restore)
-        * [`show`](#show)
-        * [`show-shards`](#show-shards)
-        * [`update-data`](#update-data)
-        * [`token`](#token)
-        * [`truncate-shards`](#truncate-shards)
+    * [`add-data`](#add-data)
+    * [`add-meta`](#add-meta)
+    * [`backup`](#backup)
+    * [`copy-shard`](#copy-shard)
+    * [`copy-shard-status`](#copy-shard-status)
+    * [`entropy`](#entropy)
+    * [`join`](#join)
+    * [`kill-copy-shard`](#kill-copy-shard)
+    * [`leave`](#leave)
+    * [`remove-data`](#remove-data)
+    * [`remove-meta`](#remove-meta)
+    * [`remove-shard`](#remove-shard)
+    * [`restore`](#restore)
+    * [`show`](#show)
+    * [`show-shards`](#show-shards)
+    * [`update-data`](#update-data)
+    * [`token`](#token)
+    * [`truncate-shards`](#truncate-shards)
 * [`influx` command line interface (CLI)](#influx-command-line-interface-cli)
-
 
 ## `influxd-ctl` cluster management utility
 
@@ -103,8 +102,8 @@ The following examples use the `influxd-ctl` utility's [`show` option](#show).
 
 #### Binding to a remote meta node
 
-```
-$ influxd-ctl -bind meta-node-02:8091 show
+```shell
+influxd-ctl -bind meta-node-02:8091 show
 ```
 
 The `influxd-ctl` utility binds to the meta node with the hostname `meta-node-02` at port `8091`.
@@ -112,20 +111,21 @@ By default, the tool binds to the meta node with the hostname `localhost` at por
 
 #### Authenticating with JWT
 
+```shell
+influxd-ctl -auth-type jwt -secret oatclusters show
 ```
-$ influxd-ctl -auth-type jwt -secret oatclusters show
-```
+
 The `influxd-ctl` utility uses JWT authentication with the shared secret `oatclusters`.
 
 If authentication is enabled in the cluster's [meta node configuration files](/enterprise_influxdb/v1.7/administration/config-meta-nodes#auth-enabled-false) and [data node configuration files](/enterprise_influxdb/v1.7/administration/config-data-nodes#meta-auth-enabled-false) and the `influxd-ctl` command does not include authentication details, the system returns:
 
-```
+```shell
 Error: unable to parse authentication credentials.
 ```
 
 If authentication is enabled and the `influxd-ctl` command provides the incorrect shared secret, the system returns:
 
-```
+```shell
 Error: signature is invalid.
 ```
 
@@ -135,19 +135,19 @@ To authenticate a user with basic authentication, use the `-auth-type basic` opt
 
 In the following example, the `influxd-ctl` utility uses basic authentication for a cluster user.
 
-```
-$ influxd-ctl -auth-type basic -user admini -pwd mouse show
+```shell
+influxd-ctl -auth-type basic -user admini -pwd mouse show
 ```
 
 If authentication is enabled in the cluster's [meta node configuration files](/enterprise_influxdb/v1.7/administration/config-meta-nodes#auth-enabled-false) and [data node configuration files](/enterprise_influxdb/v1.7/administration/config-data-nodes#meta-auth-enabled-false) and the `influxd-ctl` command does not include authentication details, the system returns:
 
-```
+```shell
 Error: unable to parse authentication credentials.
 ```
 
 If authentication is enabled and the `influxd-ctl` command provides the incorrect username or password, the system returns:
 
-```
+```shell
 Error: authorization failed.
 ```
 
@@ -174,7 +174,7 @@ Resources: [Production installation](/enterprise_influxdb/v1.7/production_instal
 In the following example, the `add-data` command contacts the local meta node running at `localhost:8091` and adds a data node to that meta node's cluster.
 The data node has the hostname `cluster-data-node` and runs on port `8088`.
 
-```
+```shell
 $ influxd-ctl add-data cluster-data-node:8088
 
 Added data node 3 at cluster-data-node:8088
@@ -185,7 +185,7 @@ Added data node 3 at cluster-data-node:8088
 In the following example, the command contacts the meta node running at `cluster-meta-node-01:8091` and adds a data node to that meta node's cluster.
 The data node has the hostname `cluster-data-node` and runs on port `8088`.
 
-```
+```shell
 $ influxd-ctl -bind cluster-meta-node-01:8091 add-data cluster-data-node:8088
 
 Added data node 3 at cluster-data-node:8088
@@ -212,7 +212,7 @@ influxd-ctl add-meta <meta-node-HTTP-bind-address>
 In the following example, the `add-meta` command contacts the local meta node running at `localhost:8091` and adds a meta node to that local meta node's cluster.
 The added meta node has the hostname `cluster-meta-node-03` and runs on port `8091`.
 
-```
+```shell
 $ influxd-ctl add-meta cluster-meta-node-03:8091
 
 Added meta node 3 at cluster-meta-node:8091
@@ -223,7 +223,7 @@ Added meta node 3 at cluster-meta-node:8091
 In the following example, the `add-meta` command contacts the meta node running at `cluster-meta-node-01:8091` and adds a meta node to that meta node's cluster.
 The added meta node has the hostname `cluster-meta-node-03` and runs on port `8091`.
 
-```
+```shell
 $ influxd-ctl -bind cluster-meta-node-01:8091 add-meta cluster-meta-node-03:8091
 
 Added meta node 3 at cluster-meta-node-03:8091
@@ -240,6 +240,7 @@ If there are no existing incremental backups, the system automatically performs 
 ```
 influxd-ctl backup [ -db <database> | -from <data-node-TCP-bind-address> | -full | -rp <retention-policy> | -shard <shard-id> ] <backup-directory>
 ```
+
 ##### Arguments
 
 Optional arguments are in brackets.
@@ -277,12 +278,9 @@ In the following example, the command performs an incremental backup and stores 
 If there are any existing backups the current directory, the system performs an incremental backup.
 If there aren’t any existing backups in the current directory, the system performs a complete backup of the cluster.
 
-```
+```shell
 $ influxd-ctl backup .
-```
 
-Output:
-```
 Backing up meta data... Done. 421 bytes transferred
 Backing up node cluster-data-node:8088, db telegraf, rp autogen, shard 4... Done. Backed up in 903.539567ms, 307712 bytes transferred
 Backing up node cluster-data-node:8088, db _internal, rp monitor, shard 1... Done. Backed up in 138.694402ms, 53760 bytes transferred
@@ -299,19 +297,15 @@ $ ls
 
 In the following example, the `backup` command performs a full backup of the cluster and stores the backup in the existing directory `backup_dir`.
 
-```
+```shell
 $ influxd-ctl backup -full backup_dir
-```
 
-Output:
-
-```
 Backing up meta data... Done. 481 bytes transferred
 Backing up node cluster-data-node:8088, db _internal, rp monitor, shard 1... Done. Backed up in 33.207375ms, 238080 bytes transferred
 Backing up node cluster-data-node:8088, db telegraf, rp autogen, shard 2... Done. Backed up in 15.184391ms, 95232 bytes transferred
 Backed up to backup_dir in 51.388233ms, transferred 333793 bytes
 
-~# ls backup_dir
+$ ls backup_dir
 20170130T184058Z.manifest
 20170130T184058Z.meta
 20170130T184058Z.s1.tar.gz
@@ -320,7 +314,8 @@ Backed up to backup_dir in 51.388233ms, transferred 333793 bytes
 
 #### `copy-shard`
 
-Copies a [shard](/influxdb/v1.7/concepts/glossary/#shard) from a source data node to a destination data node.
+Copies a [shard](/influxdb/v1.7/concepts/glossary/#shard) from a source data node to a destination data node, 
+overwriting the destination shard.
 
 #### Syntax
 
@@ -336,7 +331,7 @@ Resources: [Rebalancing InfluxDB Enterprise clusters](/enterprise_influxdb/v1.7/
 
 In the following example, the `copy-shard` command copies the shard with the id `22` from the data node running at `cluster-data-node-01:8088` to the data node running at `cluster-data-node-02:8088`.
 
-```
+```shell
 $ influxd-ctl copy-shard cluster-data-node-01:8088 cluster-data-node-02:8088 22'
 
 Copied shard 22 from cluster-data-node-01:8088 to cluster-data-node-02:8088
@@ -361,7 +356,7 @@ The system is copying shard `34` from `cluster-data-node-02:8088` to `cluster-da
 Shard `34` is associated with the `telegraf` database and the `autogen` retention policy.
 The `TotalSize` and `CurrentSize` columns are reported in bytes.
 
-```
+```shell
 $ influxd-ctl copy-shard-status
 
 Source                     Dest                       Database  Policy   ShardID  TotalSize  CurrentSize  StartedAt
@@ -397,7 +392,7 @@ influxd-ctl entropy <subcommand> [<arguments>]
 
 In this example, the `entropy show` command returns all shards with detected entropy.
 
-```
+```shell
 $ influxd-ctl entropy show
 
 Entropy
@@ -412,7 +407,7 @@ ID     Database  Retention Policy  Start                          End           
 In this example, the `entropy repair` command adds a shard with detected entropy to the repair queue.
 The `repair` subcommand requires a Shard ID, which can be obtained from the `influxd-ctl entropy show` output.
 
-```
+```shell
 $ influxd-ctl entropy repair 21179
 Repair Shard 21179 queued
 ```
@@ -422,7 +417,7 @@ Repair Shard 21179 queued
 In this example, the `entropy kill-repair` command removes a shard from the repair queue.
 The `kill-repair` subcommand requires a Shard ID, which can be obtained from the `influxd-ctl entropy show` output.
 
-```
+```shell
 $ influxd-ctl entropy kill-repair 21179
 Shard 21179 removed from repair queue
 ```
@@ -460,11 +455,11 @@ Resources: [QuickStart installation](/enterprise_influxdb/v1.7/quickstart_instal
 
 #### Examples
 
-###### Joining a meta and data node into a cluster
+##### Joining a meta and data node into a cluster
 
 In this example, the `join` command joins the meta node running at `cluster-node-03:8091` and the data node running at `cluster-node-03:8088` into a new cluster.
 
-```
+```shell
 $ influxd-ctl join
 
 Joining meta node at localhost:8091
@@ -481,12 +476,12 @@ Successfully created cluster
   influxd-ctl join cluster-node-03:8091
 ```
 
-###### Joining a meta and data node to an existing cluster
+##### Joining a meta and data node to an existing cluster
 
 The command joins the meta node running at `cluster-node-03:8091` and the data node running at `cluster-node-03:8088` to an existing cluster.
 The existing cluster includes the meta node running at `cluster-meta-node-02:8091`.
 
-```
+```shell
 $ influxd-ctl join cluster-meta-node-02:8091
 
 Joining meta node at cluster-meta-node-02:8091
@@ -499,13 +494,13 @@ Successfully joined cluster
   * Added data node 4 at cluster-node-03:8088
 ```
 
-###### Joining a meta node to an existing cluster
+##### Joining a meta node to an existing cluster
 
 The command joins the meta node running at `cluster-meta-node-03:8091` to an existing cluster.
 The existing cluster includes the meta node running at `cluster-meta-node-02:8091`.
 The system doesn't join a data node to the cluster because it doesn't find a data node at `cluster-meta-node-03:8088`.
 
-```
+```shell
 $ influxd-ctl join cluster-meta-node-02:8091
 
 Joining meta node at cluster-meta-node-02:8091
@@ -518,13 +513,13 @@ Successfully joined cluster
   * No data node added.  Run with -v to see more information
 ```
 
-####### Joining a meta node to an existing cluster and show detailed information about the join
+##### Joining a meta node to an existing cluster and show detailed information about the join
 
 The command joins the meta node running at `cluster-meta-node-03:8091` to an existing cluster.
 The existing cluster includes the meta node running at `cluster-meta-node-02:8091`.
 The `-v` argument prints detailed information about the join.
 
-```
+```shell
 $ influxd-ctl join -v meta-node-02:8091
 
 Joining meta node at meta-node-02:8091
@@ -565,7 +560,7 @@ influxd-ctl kill-copy-shard <data-node-source-TCP-address> <data-node-destinatio
 
 In this example, the `kill-copy-shard` command aborts the `copy-shard` command that was copying shard `39` from `cluster-data-node-02:8088` to `cluster-data-node-03:8088`.
 
-```
+```shell
 $ influxd-ctl kill-copy-shard cluster-data-node-02:8088 cluster-data-node-03:8088 39
 
 Killed shard copy 39 from cluster-data-node-02:8088 to cluster-data-node-03:8088
@@ -601,7 +596,7 @@ Assume yes (`y`) to all prompts.
 In this example, the `leave` command removes the meta node running at `cluster-node-03:8091` and the data node running at `cluster-node-03:8088` from an existing cluster.
 Here, we respond yes (`y`) to the two prompts that ask if we'd like to remove the data node and if we'd like to remove the meta node from the cluster.
 
-```
+```shell
 $ influxd-ctl leave
 
 Searching for data node on cluster-node-03:8088...
@@ -621,7 +616,7 @@ Successfully left cluster
 In this example, the `leave` command removes the meta node running at `cluster-node-03:8091` and the data node running at `cluster-node-03:8088` from an existing cluster.
 Because we specify the `-y` flag, the system assumes that we'd like to remove both the data node and meta node from the cluster and does not prompt us for responses.
 
-```
+```shell
 $ influxd-ctl leave -y
 
 Searching for data node on cluster-node-03:8088...
@@ -639,7 +634,7 @@ Successfully left cluster
 In this example, the `leave` command removes the meta node running at `cluster-meta-node-03:8091` from an existing cluster.
 The system doesn't remove a data node from the cluster because it doesn't find a data node running at `cluster-meta-node-03:8088`.
 
-```
+```shell
 $ influxd-ctl leave
 
 Searching for data node on cluster-meta-node-03:8088...
@@ -683,8 +678,8 @@ Use `-force` if the data node process is not running.
 
 In this example, the `remove-data` command removes a data node running at `cluster-data-node-03:8088` from an existing cluster.
 
-```
-~# influxd-ctl remove-data cluster-data-node-03:8088
+```shell
+$ influxd-ctl remove-data cluster-data-node-03:8088
 Removed data node at cluster-data-node-03:8088
 ```
 
@@ -730,7 +725,7 @@ Assumes `Yes` to all prompts.
 In this example, the `remove-meta` command removes the meta node at `cluster-meta-node-02:8091` from an existing cluster.
 In the example, we respond yes (`y`) to the prompt that asks if we'd like to remove the meta node from the cluster.
 
-```
+```shell
 $ influxd-ctl remove-meta cluster-meta-node-02:8091
 
 Remove cluster-meta-node-02:8091 from the cluster [y/N]: y
@@ -745,7 +740,7 @@ In the example, we respond yes (`y`) to the prompt that asks if we'd like to for
 Note that if the meta node at `cluster-meta-node-02:8091` restarts, it may interfere with the cluster.
 Only perform a force removal of a meta node if the node is not reachable and unrecoverable.
 
-```
+```shell
 $ influxd-ctl remove-meta -force -tcpAddr cluster-meta-node-02:8089 cluster-meta-node-02:8091
 
 Force remove cluster-meta-node-02:8091 from the cluster [y/N]:y
@@ -772,8 +767,8 @@ Resources: [Cluster Rebalance](/enterprise_influxdb/v1.7/guides/rebalance/)
 
 In this example, the `remove-shard` command removes shard `31` from the data node running at `cluster-data-node-02:8088`.
 
-```
-~# influxd-ctl remove-shard cluster-data-node-02:8088 31
+```shell
+$ influxd-ctl remove-shard cluster-data-node-02:8088 31
 
 Removed shard 31 from cluster-data-node-02:8088
 ```
@@ -795,7 +790,6 @@ influxd-ctl restore [ -db <db_name> | -full | -list | -newdb <newdb_name> | -new
 The `restore` command must specify either the `path-to-backup-manifest-file` or the `path-to-backup-directory`.
 If the restore uses the `-full` argument, specify the `path-to-backup-manifest-file`.
 If the restore doesn't use the `-full` argument, specify the `<path-to-backup-directory>`.
-
 
 ##### Arguments
 
@@ -836,14 +830,13 @@ Identifier of the [shard](/influxdb/v1.7/concepts/glossary/#shard) to restore.
 
 Resources: [Backing up and restoring in InfluxDB Enterprise](/enterprise_influxdb/v1.7/administration/backup-and-restore/#restore)
 
-
 #### Examples
 
 ###### Restoring from an incremental backup
 
 In this example, the `restore` command restores an incremental backup stored in the `my-incremental-backup/` directory.
 
-```
+```shell
 $ influxd-ctl restore my-incremental-backup/
 
 Using backup directory: my-incremental-backup/
@@ -858,7 +851,7 @@ Restored from my-incremental-backup/ in 83.892591ms, transferred 588800 bytes
 
 In this example, the `restore` command is used to restore a full backup that includes the manifest file at `my-full-backup/20170131T020341Z.manifest`.
 
-```
+```shell
 $ influxd-ctl restore -full my-full-backup/20170131T020341Z.manifest
 
 Using manifest: my-full-backup/20170131T020341Z.manifest
@@ -886,7 +879,7 @@ influxd-ctl show
 In this example, the `show` command output displays that the cluster includes three meta nodes and two data nodes.
 Every node is using InfluxDB Enterprise `1.3.x-c1.3.x`.
 
-```
+```shell
 $ influxd-ctl show
 
 Data Nodes
@@ -921,7 +914,7 @@ The desired number of copies for shard `51` is `2` and it belongs to shard group
 The data in shard `51` cover the time range between `2017-03-13T00:00:00Z` and `2017-03-20T00:00:00Z`, and the shard has no expiry time; `telegraf`'s `autogen` retention policy has an infinite duration so the system never removes shard `51`.
 Finally, shard `51` appears on two data nodes: `cluster-data-node-01:8088` and `cluster-data-node-03:8088`.
 
-```
+```shell
 $ influxd-ctl show-shards
 
 Shards
@@ -947,7 +940,7 @@ influxd-ctl update-data <data-node-old-TCP-bind-address> <data-node-new-TCP-bind
 
 In this example, the `update-data` command updates the address for data node `26` from `cluster-node-01:8088` to `cluster-data-node-01:8088`.
 
-```
+```shell
 $ influxd-ctl update-data cluster-node-01:8088 cluster-data-node-01:8088
 
 updated data node 26 to cluster-data-node-01:8088
@@ -979,7 +972,7 @@ By default, the token expires after one minute.
 
 In this example, the `token` command returns a signed JWT token.
 
-```
+```shell
 $ influxd-ctl -auth-type jwt -secret oatclusters token
 
 hereistokenisitgoodandsoareyoufriend.timingisaficklefriendbutwherewouldwebewithoutit.timingthentimeseriesgood-wevemadetheleap-nowletsgetdownanddataandqueryallourheartsout
@@ -989,7 +982,7 @@ hereistokenisitgoodandsoareyoufriend.timingisaficklefriendbutwherewouldwebewitho
 
 In this example, the `token` command returns an error because the command doesn't use JWT authentication.
 
-```
+```shell
 $ influxd-ctl -auth-type basic -user admini -pwd mouse token
 
 token: tokens can only be created when using bearer authentication
@@ -1024,7 +1017,7 @@ Resources: [Cluster rebalancing](/enterprise_influxdb/v1.7/guides/rebalance/)
 
 In this example, after running the `truncate-shards` command and waiting one minute, the output of the [`show-shards` command](#show-shards) shows that the system truncated shard `51` (truncated shards have an asterisk (`*`) on the timestamp in the `End` column) and created the new shard with the id `54`.
 
-```
+```shell
 $ influxd-ctl truncate-shards
 
 Truncated shards.
@@ -1042,7 +1035,7 @@ ID  Database             Retention Policy  Desired Replicas  Shard Group  Start 
 
 In this example, after running the `truncate-shards` command and waiting three minutes, the output of the [`show-shards` command](#show-shards) shows that the system truncated shard `54` (truncated shards have an asterix (`*`) on the timestamp in the `End` column) and created the new shard with the id `58`.
 
-```
+```shell
 $ influxd-ctl truncate-shards -delay 3m
 
 Truncated shards.

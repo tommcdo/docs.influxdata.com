@@ -1,6 +1,6 @@
 ---
 title: InfluxDB command line interface (CLI/shell)
-
+description: Use the "influx" command line interface to write data, execute queries, and manage InfluxDB databases.
 menu:
   influxdb_1_7:
     name: InfluxDB command line interface (CLI/shell)
@@ -103,7 +103,7 @@ By default, InfluxDB runs on localhost.
 ### `-import`
 
 Import new data from a file or import a previously [exported](https://github.com/influxdb/influxdb/blob/master/importer/README.md) database from a file.
-See [-import](/influxdb/v1.7/tools/shell/#import-data-from-a-file-with-import).
+See [-import](#import-data-from-a-file-with-import).
 
 ### `-password '<password>'`
 
@@ -258,7 +258,7 @@ $ influx -format=json -pretty
 }
 ```
 
-### Import data from a file with `-import`
+### Import data from a file using `-import`
 
 The import file has two sections:
 
@@ -285,13 +285,10 @@ treasures,captain_id=tetra value=47 1439856000
 treasures,captain_id=crunch value=109 1439858880
 ```
 
-Command:
-```
-$influx -import -path=datarrr.txt -precision=s
-```
+Example:
 
-Results:
-```
+```shell
+$ influx -import -path=datarrr.txt -precision=s
 2015/12/22 12:25:06 Processed 2 commands
 2015/12/22 12:25:06 Processed 5 inserts
 2015/12/22 12:25:06 Failed 0 inserts
@@ -307,8 +304,9 @@ For example:
 
 Things to note about `-import`:
 
+* When importing data into a database, data is merged without overwriting existing data.
 * Allow the database to ingest points by using `-pps` to set the number of points per second allowed by the import. By default, pps is zero and `influx` does not throttle importing.
-* Imports work with `.gz` files, just include `-compressed` in the command.
+* Imports work with gzip files, just include `-compressed` in the command.
 * Include timestamps in the data file. InfluxDB will assign the same timestamp to points without a timestamp. This can lead to unintended [overwrite behavior](/influxdb/v1.7/troubleshooting/frequently-asked-questions/#how-does-influxdb-handle-duplicate-points).
 * If your data file has more than 5,000 points, it may be necessary to split that file into several files in order to write your data in batches to InfluxDB.
 We recommend writing points in batches of 5,000 to 10,000 points.

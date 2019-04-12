@@ -238,7 +238,7 @@ Once a repair has started, requests to cancel it are ignored.
 
 This section covers some of the common use cases for the anti-entropy service.
 
-### Detecting and repairing entropy
+### Detect and repair entropy
 
 Periodically, you may want to see if shards in your cluster have entropy or are
 inconsistent with other shards in the shard group.
