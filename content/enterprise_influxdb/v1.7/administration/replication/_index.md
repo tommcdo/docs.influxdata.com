@@ -10,14 +10,16 @@ menu:
     parent: Administration
 ---
 
-## [Manage data inconsistency and entropy](/enterprise_influxdb/v1.7/administration/entropy/manage-entropy)
+## [Manage data inconsistency and entropy](/enterprise_influxdb/v1.7/administration/replication/manage-data-consistency)
 
-## [Use the Anti-Entropy service to maintain data consistency](/enterprise_influxdb/v1.7/administration/entropy/anti-entropy-enabled)
+## [Use the Anti-Entropy service to maintain data consistency](/enterprise_influxdb/v1.7/administration/replication/anti-entropy-enabled)
 
-## [Manage Anti-Entropy using `influxd-ctl` commands](/enterprise_influxdb/v1.7/administration/entropy/anti-entropy-command-line)
+## [Manage Anti-Entropy using `influxd-ctl` commands](/enterprise_influxdb/v1.7/administration/replication/anti-entropy-command-line)
 
-## [Repair shard data inconsistencies manually](/enterprise_influxdb/v1.7/administration/entropy/repair-shard-inconsistencies-manually)
+## [Repair shard data inconsistencies manually](/enterprise_influxdb/v1.7/administration/replication/repair-shard-inconsistencies-manually)
 
-## [Repair shard data inconsistencies using the Anti-Entropy service](/enterprise_influxdb/v1.7/administration/entropy/repair-shard-inconsistencies-ae)
+## [Repair shard data inconsistencies using the Anti-Entropy service](/enterprise_influxdb/v1.7/administration/replication/repair-shard-inconsistencies-ae)
 
-## [Replace missing shards](/enterprise_influxdb/v1.7/administration/entropy/replace-missing-shards)
+## [Replace missing shards](/enterprise_influxdb/v1.7/administration/replication/replace-missing-shards)
+
+## [Use the Anti-Entropy HTTP API](/enterprise_influxdb/v1.7/administration/replication/anti-entropy-api)
