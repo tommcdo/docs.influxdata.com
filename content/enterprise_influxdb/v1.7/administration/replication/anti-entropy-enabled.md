@@ -4,9 +4,9 @@ aliases:
   - /enterprise_influxdb/v1.7/guides/anti-entropy/
 menu:
   enterprise_influxdb_1_7:
-    menu: Anti-entropy service
+    menu: Anti-Entropy service
     weight: 40
-    parent: Administration
+    parent: Replication
 ---
 
 <dt>
@@ -31,7 +31,14 @@ This guide covers how AE works and some of the basic situations where it takes e
 
 ## Concepts
 
-The anti-entropy service is part of the `influxd` process running on each data node
+The Anti-Entropy service is a mechanism that runs in the background to monitor
+shard data inconsistencies, automatically recover missing shards, and used to 
+manually repair shard entropy. The Anti-Entropy service is expensive since it involves
+a comparison of all shard replicas. Normally, the shard copies are in nearly complete
+agreement, resulting in a lot of wasted work building digests, maintaining digests, and comparing
+digests between shard replicas.
+
+part of the `influxd` process running on each data node
 that ensures the node has all the shards the metastore says it owns and
 that those shards are in sync with others in the same shard group.
 If any shards are missing, the AE service will copy existing shards from other shard owners.

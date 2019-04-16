@@ -1,11 +1,11 @@
 ---
-title: Manage data inconsistency in InfluxDB Enterprise clusters
+title: Manage data consistency and entropy
 aliases:
   - /enterprise_influxdb/v1.7/guides/anti-entropy/
 menu:
   enterprise_influxdb_1_7:
-    menu: Anti-entropy service
-    name: Replication  --p,        m
+    menu: Replication and data consistency
+    name: Replication
     weight: 40
     parent: Administration
 ---
@@ -16,10 +16,12 @@ menu:
 
 ## [Manage Anti-Entropy using `influxd-ctl` commands](/enterprise_influxdb/v1.7/administration/replication/anti-entropy-command-line)
 
-## [Repair shard data inconsistencies manually](/enterprise_influxdb/v1.7/administration/replication/repair-shard-inconsistencies-manually)
+## [Hinted Handoff and entropy](enterprise_influxdb/v1.7/administration/replication/hinted-handoff)
 
-## [Repair shard data inconsistencies using the Anti-Entropy service](/enterprise_influxdb/v1.7/administration/replication/repair-shard-inconsistencies-ae)
+## [Detect and repair shard data inconsistencies manually](/enterprise_influxdb/v1.7/administration/replication/detect-repair-shard-inconsistencies-manually)
 
-## [Replace missing shards](/enterprise_influxdb/v1.7/administration/replication/replace-missing-shards)
+## [Detect and repair shard data inconsistencies using the Anti-Entropy service](/enterprise_influxdb/v1.7/administration/replication/detect-repair-shard-inconsistencies-ae)
+
+## [Detect and replace missing shards](/enterprise_influxdb/v1.7/administration/replication/replace-missing-shards)
 
 ## [Use the Anti-Entropy HTTP API](/enterprise_influxdb/v1.7/administration/replication/anti-entropy-api)

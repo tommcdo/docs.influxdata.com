@@ -9,7 +9,7 @@ menu:
 ---
 
 <dt>
-The procedures on this page assume that the [Anti-Entropy service](/enterprise_influxdb/v1.7/administration/anti-entropy) is disabled. 
+Procedures below require that the [Anti-Entropy service](/enterprise_influxdb/v1.7/administration/anti-entropy) is disabled. 
 </dt>
 
 ## Shard entropy overview

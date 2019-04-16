@@ -1,5 +1,5 @@
 ---
-title: Use "influxd-ctl entropy" commands to  managing entropy
+title: Use "influxd-ctl entropy" commands to  manage entropy
 description: Use the "influxd-ctl entropy" commands to show and repair entropy.
 aliases:
   - /enterprise_influxdb/v1.7/guides/anti-entropy/
@@ -10,7 +10,7 @@ menu:
     parent: Entropy
 ---
 
-## `influxd-ctl entropy` command line tools for managing entropy
+## `influxd-ctl entropy` command line tools
 
 The `influxd-ctl entropy` command and its subcommands can be used to manage shard entropy in a cluster.
 It includes the following subcommands:

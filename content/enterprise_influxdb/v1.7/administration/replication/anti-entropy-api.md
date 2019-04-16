@@ -1,15 +1,15 @@
+---
+title: Anti-Entropy HTTP API reference
+menu:
+  enterprise_influxdb_1_7:
+    menu: Anti-Entropy API
+    weight: 45
+    parent: Replication
+---
 
 
 
-
-
-
-
-
-
-
-
-## Anti-Entropy API 
+## Anti-Entropy HTTP API 
 
 ### `/status`
 

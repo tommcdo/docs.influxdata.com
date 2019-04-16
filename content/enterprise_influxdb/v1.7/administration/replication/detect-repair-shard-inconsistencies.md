@@ -1,11 +1,10 @@
 ---
-title: Manage entropy resulting from shard inconsistencies
-description: Manage shard inconsistencies to 
+title: Detect and repair shard data inconsistencies
 aliases:
   - /enterprise_influxdb/v1.7/guides/anti-entropy/
 menu:
   enterprise_influxdb_1_7:
-    menu: Anti-entropy service
+    menu: Detect and repair shard inconsistencies
     weight: 40
     parent: Administration
 ---
