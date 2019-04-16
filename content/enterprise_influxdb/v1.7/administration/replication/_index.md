@@ -5,11 +5,14 @@ aliases:
 menu:
   enterprise_influxdb_1_7:
     menu: Anti-entropy service
+    name: Replication  --p,        m
     weight: 40
     parent: Administration
 ---
 
 ## [Manage data inconsistency and entropy](/enterprise_influxdb/v1.7/administration/entropy/manage-entropy)
+
+## [Use the Anti-Entropy service to maintain data consistency](/enterprise_influxdb/v1.7/administration/entropy/anti-entropy-enabled)
 
 ## [Manage Anti-Entropy using `influxd-ctl` commands](/enterprise_influxdb/v1.7/administration/entropy/anti-entropy-command-line)
 

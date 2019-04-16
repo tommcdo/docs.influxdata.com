@@ -1,11 +1,11 @@
 ---
-title: Maintain data consistency among shards
+title: Manage data consistency
 description: Maintain data consistency in InfluxDB Enterprise clusters with manual repairs, replacing missing shards, or using the Anti-Entropy service
 menu:
   enterprise_influxdb_1_7:
-    menu: Maintain data consistency and reverse entropy
+    menu: Manage data consistency
     weight: 45
-    parent: Entropy
+    parent: Replication
 ---
 
 ## Overview
