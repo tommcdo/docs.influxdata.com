@@ -1,0 +1,9 @@
+---
+title: Using the HTTP input plugin with Citi Bike data
+description:
+menu:
+  telegraf_1_13:
+    name: Using the HTTP plugin
+    weight: 30
+    parent: Guides
+---
