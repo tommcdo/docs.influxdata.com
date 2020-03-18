@@ -67,7 +67,6 @@ List of host names that should **not** go through any proxy. If set to an asteri
 NO_PROXY=123.45.67.89,123.45.67.90
 ```
 
-
 ## `influx` options
 
 The `influx` shell includes options that you can pass into `influx` when starting.
@@ -119,6 +118,10 @@ variable.
 
 The path to the file to import.
 Use with `-import`.
+
+### `-path-prefix`
+
+The path to add to the URL after the host and port. Lets you specify a custom endpoint to connect to.
 
 ### `-port 'port #'`
 
